@@ -1,0 +1,11 @@
+let
+    Source = Table.NestedJoin(DOIs_in_OpenAlex, {"doi"}, DOIs_in_Pure, {"DOI URL"}, "DOIs_in_Pure", JoinKind.LeftAnti),
+    #"Removed Other Columns" = Table.SelectColumns(Source,{"doi"}),
+    #"Filtered Rows" = Table.SelectRows(#"Removed Other Columns", each ([doi] <> null)),
+    #"Merged Queries" = Table.NestedJoin(#"Filtered Rows", {"doi"}, DOIs_in_OpenAlex, {"doi"}, "OpenAlex_dois", JoinKind.LeftOuter),
+    #"Expanded OpenAlex_dois" = Table.ExpandTableColumn(#"Merged Queries", "OpenAlex_dois", {"title"}, {"OpenAlex_dois.title"}),
+    #"Renamed Columns" = Table.RenameColumns(#"Expanded OpenAlex_dois",{{"OpenAlex_dois.title", "title"}}),
+    #"Invoked Custom Function" = Table.AddColumn(#"Renamed Columns", "CheckTitleInAPI", each CheckTitleInPureAPI([title])),
+    #"Renamed Columns1" = Table.RenameColumns(#"Invoked Custom Function",{{"CheckTitleInAPI", "possible match on title in Pure?"}})
+in
+    #"Renamed Columns1"
