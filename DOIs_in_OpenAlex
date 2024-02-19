@@ -1,0 +1,27 @@
+let
+    // Function to retrieve data from a single page
+    GetDataFromPage = (page as number) =>
+        let
+            Url = "https://api.openalex.org/works?filter=institution.id:InstitutionID1|InstitutionID2,publication_year:2024&page=&mailto=my-email@example.com" & Text.From(page),
+            Source = Json.Document(Web.Contents(Url)),
+            Data = Source[results],
+            ConvertToTable = if Data <> null then Table.FromList(Data, Splitter.SplitByNothing(), null, null, ExtraValues.Error) else null,
+            ExpandedTable = if ConvertToTable <> null then Table.ExpandRecordColumn(ConvertToTable, "Column1", Record.FieldNames(Data{0})) else null
+        in
+            ExpandedTable,
+
+    // Retrieve initial data to calculate total pages
+    InitialData = GetDataFromPage(1),
+    MetaData = Json.Document(Web.Contents("https://api.openalex.org/works?filter=institution.id:InstitutionID1|InstitutionID2,publication_year:2024"))[meta],
+    TotalResults = MetaData[count],
+    ResultsPerPage = MetaData[per_page],
+    TotalPages = Number.RoundUp(TotalResults / ResultsPerPage),
+
+    // Retrieve data from all pages
+    AllData = List.Transform({1..TotalPages}, each GetDataFromPage(_)),
+    CombinedData = Table.Combine(AllData),
+    #"Lowercased Text" = Table.TransformColumns(CombinedData,{{"doi", Text.Lower, type text}}),
+    #"Trimmed Text" = Table.TransformColumns(#"Lowercased Text",{{"doi", Text.Trim, type text}}),
+    #"Removed Other Columns" = Table.SelectColumns(#"Trimmed Text",{"doi", "title"})
+in
+    #"Removed Other Columns"
