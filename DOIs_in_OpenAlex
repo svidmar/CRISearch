@@ -12,7 +12,7 @@ let
 
     // Retrieve initial data to calculate total pages
     InitialData = GetDataFromPage(1),
-    MetaData = Json.Document(Web.Contents("https://api.openalex.org/works?filter=institution.id:InstitutionID1|InstitutionID2,publication_year:2024"))[meta],
+    MetaData = Json.Document(Web.Contents("https://api.openalex.org/works?filter=institution.id:InstitutionID1|InstitutionID2,publication_year:2024&mailto=my-email@example.com"))[meta],
     TotalResults = MetaData[count],
     ResultsPerPage = MetaData[per_page],
     TotalPages = Number.RoundUp(TotalResults / ResultsPerPage),
