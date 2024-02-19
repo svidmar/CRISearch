@@ -1,6 +1,9 @@
 # CRISearch
 Compare publications in local research information system with publications in OpenAlex.
 
+![alt text](https://github.com/svidmar/CRISearch/blob/bc15c98cce496f75c4d574fc664bcb701887b139/img.png)
+
+
 PowerBI Report which compares publications in an institutions research information management system - in this case Pure - with the institutions publications in OpenAlex. Can be used to find missing publications, enrich metadata, find Unpaywall URL’s and more.
 
 To import missing publications, this might come in handy: link…
