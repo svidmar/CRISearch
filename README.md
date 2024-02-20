@@ -6,7 +6,7 @@ Compare publications in local research information system with publications in O
 
 PowerBI Report which compares publications in an institutions research information management system - in this case Pure - with the institutions publications in OpenAlex. Can be used to find missing publications, enrich metadata, find Unpaywall URL’s and more.
 
-[To import missing publications, this might come in handy]: (https://github.com/svidmar/OpenAlex2RIS)
+To import missing publications, this might come in handy: [](https://github.com/svidmar/OpenAlex2RIS)
 
 The report consists of three data tables and a function. 
 M code available for inspiration. Change InstitutionID’s, API keys, e-mail etc. accordingly. 
